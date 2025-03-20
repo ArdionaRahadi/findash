@@ -180,10 +180,10 @@ $tampilkan = select("SELECT * FROM t_pemasukan_{$_SESSION["user"]}");
                         <h1 class="modal-title fs-5" id="staticBackdropLabel">Tambah Data</h1>
                         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                     </div>
-                    <div class="modal-body">
-                        <form method="post" autocomplete="off">
+                    <form method="post" autocomplete="off">
+                        <div class="modal-body">
                             <div class="form-floating mb-3">
-                                <input name="nama-barang" type="text" class="form-control" id="nama-barang"
+                                <input name="nama_barang" type="text" class="form-control" id="nama-barang"
                                     placeholder="nama barang" required>
                                 <label for="nama-barang">Nama Barang</label>
                             </div>
@@ -192,21 +192,21 @@ $tampilkan = select("SELECT * FROM t_pemasukan_{$_SESSION["user"]}");
                                     required>
                                 <label for="harga">Harga</label>
                             </div>
-                            <div class="form-floating mb-3">
+                            <div class="form-floating">
                                 <input name="tanggal" type="date" class="form-control" id="tanggal"
                                     placeholder="tanggal keluar" value="<?= date(
                                                         "Y-m-d"
                                                       ) ?>" required>
-                                <label for="tanggal">Tanggal Keluar</label>
+                                <label for="tanggal">Tanggal Masuk</label>
                             </div>
-                            <button type="submit" name="save-data" class="btn btn-success w-100">
+                        </div>
+                        <div class="modal-footer">
+                            <button type="submit" name="save-data-pemasukan" class="btn btn-success w-100">
                                 <span>Save</span>
                                 <span><i class="fa fa-save"></i></span>
                             </button>
-                        </form>
-                    </div>
-                    <div class="modal-footer">
-                    </div>
+                        </div>
+                    </form>
                 </div>
             </div>
         </div>
