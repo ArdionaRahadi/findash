@@ -7,26 +7,32 @@ if (!isset($_SESSION["login"]) || !isset($_SESSION["user"])) {
   exit();
 }
 
-$row = select("SELECT * FROM t_pemasukan_{$_SESSION["user"]}");
-$check = mysqli_query(
+$checkDataKosong = mysqli_query(
   $koneksi,
   "SELECT * FROM t_pemasukan_{$_SESSION["user"]}"
 );
+
+$tampilkan = select("SELECT * FROM t_pemasukan_{$_SESSION["user"]}");
 ?>
 
 <!DOCTYPE html>
 <html lang="id">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Dashboard Keuangan</title>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
-    
+
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+
     <link rel="stylesheet" href="/findash/public/css/style.css">
-    
-         <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
-    
+
 </head>
+
 <body>
     <!-- Mobile Nav Toggle -->
     <button class="nav-toggle" id="navToggle">
@@ -96,186 +102,122 @@ $check = mysqli_query(
                 <div class="card-headers">
                     <div class="card-titles">Total Pemasukan</div>
                     <div class="card-icons">
-                        <i class="fas fa-arrow-up"></i>
+                        <i class="fas fa-arrow-down"></i>
                     </div>
                 </div>
-                <div class="card-amounts" id="total-income">Rp 0</div>
+                <?php $totalExpenses = 0; ?>
+                <?php foreach ($tampilkan as $data) : ?>
+                <?php $totalExpenses += $data["harga"]; ?>
+                <?php endforeach; ?>
+                <div class="card-amounts" id="total-expenses">Rp <?= number_format($totalExpenses, 0, ",", ".") ?></div>
+
             </div>
         </div>
-        
-        <div class="cards-container">
-          <div class="card">
-            <div class="search-container">
-              <input type="text" class="search-input" placeholder="Search...">
+
+        <div class="cards-containers">
+            <div class="cards">
+                <div class="search-container">
+                    <input type="text" class="search-input" placeholder="Search...">
+                </div>
+                <div class="button-container">
+                    <button type="button" class="btn btn-add" data-bs-toggle="modal" data-bs-target="#staticBackdrop">
+                        <span>Tambah</span>
+                        <span><i class="fa fa-plus"></i></span>
+                    </button>
+                </div>
+                <div class="table-wrapper">
+                    <table>
+                        <tr>
+                            <th>#</th>
+                            <th>Nama</th>
+                            <th>Harga</th>
+                            <th>Tanggal</th>
+                            <th>Aksi</th>
+                        </tr>
+                        <?php if (mysqli_num_rows($checkDataKosong) > 0): ?>
+                        <?php $i = 1; ?>
+                        <?php foreach ($tampilkan as $data): ?>
+                        <tr>
+                            <td><?= $i++ ?></td>
+                            <td><?= $data["nama_barang"] ?></td>
+                            <td>Rp <?= number_format($data["harga"], "0", ",", ".") ?></td>
+                            <td><?= date("d/m/Y", strtotime($data["tanggal"])) ?></td>
+                            <td class="text-center">
+                                <div class="aksi-group">
+                                    <a class="edit">
+                                        <i class="fa-solid fa-pen-to-square"></i>
+                                    </a>
+                                    <a class="delete">
+                                        <i class="fa-solid fa-trash"></i>
+                                    </a>
+                                </div>
+                            </td>
+                        </tr>
+                        <?php endforeach; ?>
+                        <?php else: ?>
+                        <tr>
+                            <td colspan="5" class="text-center">Tidak ada data yang tersedia di tabel ini</td>
+                        </tr>
+                        <?php endif; ?>
+                    </table>
+                </div>
+                <div class="pagination">
+                    <button>Previous</button>
+                    <button class="active">1</button>
+                    <button>2</button>
+                    <button>3</button>
+                    <button>Next</button>
+                </div>
             </div>
-            <div class="button-container">
-              <button class="btn-add trigger-button">
-                <span>Tambah</span>
-                <span>
-                  <i class="fa-solid fa-plus"></i>
-                </span>
-              </button>
-            </div>
-            <div class="table-wrapper">
-              <table>
-                <tr>
-                  <th>#</th>
-                  <th>Nama</th>
-                  <th>Harga</th>
-                  <th>Tanggal</th>
-                  <th>Aksi</th>
-                </tr>
-                <?php $no = 1; ?>
-                <?php if (mysqli_num_rows($check) > 0):
-                  foreach ($row as $data): ?>
-                <tr>
-                  <td><?= $no++ ?></td>
-                  <td><?= $data["nama_barang"] ?></td>
-                  <td><?= $data["harga"] ?></td>
-                  <td><?= date("d/M/Y", strtotime($data["tanggal"])) ?></td>
-                  <td>
-                    <div class="aksi-group">
-                      <a class="edit" href="">
-                        <i class="fa-solid fa-pen-to-square"></i>
-                      </a>
-                      <a class="delete" href="">
-                        <i class="fa-solid fa-trash"></i>
-                      </a>
+        </div>
+
+        <!-- Modal Tambah -->
+        <div class="modal fade" id="staticBackdrop" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
+            aria-labelledby="staticBackdropLabel" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h1 class="modal-title fs-5" id="staticBackdropLabel">Tambah Data</h1>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                     </div>
-                  </td>
-                </tr>
-                <?php endforeach;
-                else:
-                   ?>
-                <tr>
-                  <td align="center" colspan="5">No data available in table</td>
-                </tr>
-                <?php
-                endif; ?>
-              </table>
+                    <div class="modal-body">
+                        <form method="post" autocomplete="off">
+                            <div class="form-floating mb-3">
+                                <input name="nama-barang" type="text" class="form-control" id="nama-barang"
+                                    placeholder="nama barang" required>
+                                <label for="nama-barang">Nama Barang</label>
+                            </div>
+                            <div class="form-floating mb-3">
+                                <input name="harga" type="number" class="form-control" id="harga" placeholder="harga"
+                                    required>
+                                <label for="harga">Harga</label>
+                            </div>
+                            <div class="form-floating mb-3">
+                                <input name="tanggal" type="date" class="form-control" id="tanggal"
+                                    placeholder="tanggal keluar" value="<?= date(
+                                                        "Y-m-d"
+                                                      ) ?>" required>
+                                <label for="tanggal">Tanggal Keluar</label>
+                            </div>
+                            <button type="submit" name="save-data" class="btn btn-success w-100">
+                                <span>Save</span>
+                                <span><i class="fa fa-save"></i></span>
+                            </button>
+                        </form>
+                    </div>
+                    <div class="modal-footer">
+                    </div>
+                </div>
             </div>
-            <div class="pagination">
-              <button>Previous</button>
-              <button class="active">1</button>
-              <button>2</button>
-              <button>3</button>
-              <button>Next</button>
-            </div>
-          </div>
         </div>
-        
-        <div class="modal-overlay">
-          <div class="modal">
-            <div class="modal-header">
-                <h2 class="modal-title">Form Tambah Data</h2>
-                <button class="close-button">&times;</button>
-            </div>
-            <form id="addForm" method="post">
-                <div class="form-group">
-                    <label class="form-label" for="nama">Nama</label>
-                    <input type="text" name="nama" id="nama" class="form-input" required>
-                </div>
-                <div class="form-group">
-                    <label class="form-label" for="harga">Harga</label>
-                    <input type="number" name="harga" id="harga" class="form-input" required>
-                </div>
-                <div class="form-group">
-                    <label class="form-label" for="tanggal">Tanggal</label>
-                    <input type="date" name="tanggal" id="tanggal" class="form-input" required>
-                </div>
-                <button type="submit" name="tambah" class="submit-button">
-                  <span>Simpan</span>
-                  <i class="fa-solid fa-floppy-disk"></i>
-                </button>
-            </form>
-          </div>
-        </div>
-        <!-- SweetAlert2 JS -->
-    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-        
-    <script>
-        // Disabel Confirm Resubmition
-        if (window.history.replaceState) {
-            window.history.replaceState(null, null, window.location.href);
-        }
-        
-        const triggerButton = document.querySelector('.trigger-button');
-        const modalOverlay = document.querySelector('.modal-overlay');
-        const modal = document.querySelector('.modal');
-        const closeButton = document.querySelector('.close-button');
-        const form = document.getElementById('addForm');
 
-        // Open modal
-        triggerButton.addEventListener('click', () => {
-            modalOverlay.style.display = 'block';
-            setTimeout(() => {
-                modal.classList.add('active');
-            }, 10);
-        });
 
-        // Close modal functions
-        const closeModal = () => {
-            modal.classList.remove('active');
-            setTimeout(() => {
-                modalOverlay.style.display = 'none';
-            }, 300);
-        };
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
+            integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous">
+        </script>
 
-        closeButton.addEventListener('click', closeModal);
 
-        // Close on outside click
-        modalOverlay.addEventListener('click', (e) => {
-            if (e.target === modalOverlay) {
-                closeModal();
-            }
-        });
-
-        // Close on Escape key
-        document.addEventListener('keydown', (e) => {
-            if (e.key === 'Escape') {
-                closeModal();
-            }
-        });
-        
-        // Pastikan jQuery dan SweetAlert2 sudah dimuat
-
-// Fungsi untuk update tabel
-function updateTable(data) {
-    const tableBody = $('table tbody');
-    
-    // Cek apakah ada pesan "Tidak ada data"
-    const noDataRow = tableBody.find('tr td[colspan="5"]');
-    if (noDataRow.length) {
-        tableBody.empty();
-    }
-    
-    // Hitung jumlah baris untuk penomoran
-    const rowCount = tableBody.find('tr').length + 1;
-    
-    // Buat baris baru
-    const newRow = `
-        <tr>
-            <td>${rowCount}</td>
-            <td>${data.nama_barang}</td>
-            <td>${data.harga}</td>
-            <td>${data.tanggal}</td>
-            <td>
-                <div class="aksi-group">
-                    <a class="edit" href="">
-                        <i class="fa-solid fa-pen-to-square"></i>
-                    </a>
-                    <a class="delete" href="">
-                        <i class="fa-solid fa-trash"></i>
-                    </a>
-                </div>
-            </td>
-        </tr>
-    `;
-    
-    // Tambahkan di awal tabel
-    tableBody.prepend(newRow);
-}
-    </script>
-    <script src="/findash/public/js/main.js"></script>
+        <script src="/findash/public/js/main.js"></script>
 </body>
+
 </html>
