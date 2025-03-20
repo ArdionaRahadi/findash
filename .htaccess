@@ -1,0 +1,36 @@
+RewriteEngine On
+RewriteBase /findash/
+RewriteRule ^app/ - [F,L]
+
+# Allow direct access to css and js folders
+RewriteRule ^public/css/ - [L]
+RewriteRule ^public/js/ - [L]
+
+# Redirect homepage ke auth.php
+RewriteRule ^$ public/auth.php [L]
+
+# Block direct access to error pages (error.php dan 404.php)
+RewriteCond %{THE_REQUEST} /public/404\.php [NC]
+RewriteRule ^ public/auth.php [R=301,L]
+
+# Redirect akses langsung ke file di folder public ke versi clean URL
+RewriteCond %{THE_REQUEST} ^[A-Z]{3,}\s/+findash/public/([^.]+)\.php [NC]
+RewriteRule ^ %1 [R=301,L]
+
+# Handle requests without 'public' folder and without .php extension
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteCond %{REQUEST_FILENAME} !-d
+RewriteCond %{REQUEST_URI} !^/findash/public/
+RewriteRule ^([^/]+)/?$ public/$1.php [L]
+
+# Handle missing file/folder ke error page
+ErrorDocument 404 /findash/public/404.php
+ErrorDocument 403 /findash/public/403.php
+
+# Prevent directory listing
+Options -Indexes
+
+<Files ".htaccess">
+Order Allow,Deny
+Deny from all
+</Files>
