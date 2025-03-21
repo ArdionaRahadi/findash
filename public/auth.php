@@ -43,7 +43,7 @@ if (isset($_POST["btn-register"])) {
 
     $createTablePemasukan = mysqli_query(
       $koneksi,
-      "CREATE TABLE t_pemasukan_{$username} (id INT PRIMARY KEY AUTO_INCREMENT, nama_barang VARCHAR(250), harga VARCHAR(250), tanggal DATE, id_pengeluaran INT NULL, FOREIGN KEY (id_pemasukan) REFERENCES t_pengeluaran_{$username}(id) ON DELETE CASCADE ON UPDATE CASCADE)"
+      "CREATE TABLE t_pemasukan_{$username} (id INT PRIMARY KEY AUTO_INCREMENT, nama_barang VARCHAR(250), harga VARCHAR(250), tanggal DATE)"
     ); 
 
     $insert = mysqli_query(

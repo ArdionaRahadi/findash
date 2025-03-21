@@ -144,15 +144,117 @@ $tampilkan = select("SELECT * FROM t_pemasukan_{$_SESSION["user"]}");
                             <td><?= date("d/m/Y", strtotime($data["tanggal"])) ?></td>
                             <td class="text-center">
                                 <div class="aksi-group">
-                                    <a class="edit">
+                                    <button type="button" class="btn edit" data-bs-toggle="modal"
+                                        data-bs-target="#staticBackdropEdit<?= $data['id'] ?>">
                                         <i class="fa-solid fa-pen-to-square"></i>
-                                    </a>
-                                    <a class="delete">
+                                    </button>
+                                    <button type="button" class="btn delete" data-bs-toggle="modal"
+                                        data-bs-target="#staticBackdropDelete<?= $data['id'] ?>">
                                         <i class="fa-solid fa-trash"></i>
-                                    </a>
+                                    </button>
                                 </div>
                             </td>
                         </tr>
+
+                        <!-- Modal Edit -->
+                        <div class="modal fade" id="staticBackdropEdit<?= $data['id'] ?>" data-bs-backdrop="static"
+                            data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel"
+                            aria-hidden="true">
+                            <div class="modal-dialog">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <h1 class="modal-title fs-5" id="staticBackdropLabel">Edit Data</h1>
+                                        <button type="button" class="btn-close" data-bs-dismiss="modal"
+                                            aria-label="Close"></button>
+                                    </div>
+                                    <form method="post" autocomplete="off">
+                                        <div class="modal-body">
+                                            <div class="form-floating">
+                                                <input name="id_barang" type="text" class="form-control" id="id barang"
+                                                    placeholder="id barang" value="<?= $data['id'] ?>" readonly hidden
+                                                    required>
+                                            </div>
+                                            <div class="form-floating mb-3">
+                                                <input name="nama_barang" type="text" class="form-control"
+                                                    id="nama-barang" placeholder="nama barang"
+                                                    value="<?= $data['nama_barang'] ?>" required>
+                                                <label for="nama barang">Nama Barang</label>
+                                            </div>
+                                            <div class="form-floating mb-3">
+                                                <input name="harga" type="number" class="form-control" id="harga"
+                                                    placeholder="harga" value="<?= $data['harga'] ?>" required>
+                                                <label for="harga">Harga</label>
+                                            </div>
+                                            <div class="form-floating">
+                                                <input name="tanggal" type="date" class="form-control" id="tanggal"
+                                                    placeholder="tanggal keluar" value="<?= $data['tanggal'] ?>"
+                                                    required>
+                                                <label for="tanggal">Tanggal Keluar</label>
+                                            </div>
+                                        </div>
+                                        <div class="modal-footer">
+                                            <button type="submit" name="edit-data-pemasukan"
+                                                class="btn btn-warning w-100">
+                                                <span>Edit</span>
+                                                <span><i class="fa fa-pen-to-square"></i></span>
+                                            </button>
+                                        </div>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Modal Delete -->
+                        <div class="modal fade" id="staticBackdropDelete<?= $data['id'] ?>" data-bs-backdrop="static"
+                            data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel"
+                            aria-hidden="true">
+                            <div class="modal-dialog">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <h1 class="modal-title fs-5" id="staticBackdropLabel">
+                                            Yakin ingin mengapus data berikut?
+                                        </h1>
+                                        <button type="button" class="btn-close" data-bs-dismiss="modal"
+                                            aria-label="Close"></button>
+                                    </div>
+                                    <form method="post" autocomplete="off">
+                                        <div class="modal-body">
+                                            <div class="form-floating">
+                                                <input name="id_barang" type="text" class="form-control" id="id barang"
+                                                    placeholder="id barang" value="<?= $data['id'] ?>" readonly hidden
+                                                    required>
+                                            </div>
+                                            <div class="form-floating mb-3">
+                                                <input name="nama_barang" type="text" class="form-control"
+                                                    id="nama-barang" placeholder="nama barang"
+                                                    value="<?= $data['nama_barang'] ?>" readonly required>
+                                                <label for="nama barang">Nama Barang</label>
+                                            </div>
+                                            <div class="form-floating mb-3">
+                                                <input name="harga" type="number" class="form-control" id="harga"
+                                                    placeholder="nama barang" value="<?= $data['harga'] ?>" readonly
+                                                    required>
+                                                <label for="harga">Harga</label>
+                                            </div>
+                                            <div class="form-floating">
+                                                <input name="tanggal" type="date" class="form-control" id="tanggal"
+                                                    placeholder="tanggal" value="<?= $data['tanggal'] ?>" readonly
+                                                    required>
+                                                <label for="tanggal">Taggal Keluar</label>
+                                            </div>
+                                        </div>
+                                        <div class="modal-footer">
+                                            <button type="submit" name="delete-data-pemasukan"
+                                                class="btn btn-danger w-100">
+                                                <span>Delete</span>
+                                                <span><i class="fa fa-trash"></i></span>
+                                            </button>
+                                        </div>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+
                         <?php endforeach; ?>
                         <?php else: ?>
                         <tr>

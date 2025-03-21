@@ -244,12 +244,11 @@ $tampilkan = select("SELECT * FROM t_pengeluaran_{$_SESSION["user"]}");
                                             </div>
                                         </div>
                                         <div class="modal-footer">
-                                            <form method="post" autocomplete="off">
-                                                <button type="submit" name="delete-data-pengeluaran"
-                                                    class="btn btn-danger w-100">
-                                                    <span>Delete</span>
-                                                    <span><i class="fa fa-trash"></i></span>
-                                                </button>
+                                            <button type="submit" name="delete-data-pengeluaran"
+                                                class="btn btn-danger w-100">
+                                                <span>Delete</span>
+                                                <span><i class="fa fa-trash"></i></span>
+                                            </button>
                                         </div>
                                     </form>
                                 </div>
@@ -285,6 +284,10 @@ $tampilkan = select("SELECT * FROM t_pengeluaran_{$_SESSION["user"]}");
                     </div>
                     <form method="post" autocomplete="off">
                         <div class="modal-body">
+                            <div class="form-floating">
+                                <input name="id_barang" type="text" class="form-control" id="id barang"
+                                    placeholder="id barang" readonly hidden required>
+                            </div>
                             <div class="form-floating mb-3">
                                 <input name="nama_barang" type="text" class="form-control" id="nama barang"
                                     placeholder="nama barang" required>
