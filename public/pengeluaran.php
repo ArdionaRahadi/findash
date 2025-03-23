@@ -1,5 +1,7 @@
 <?php
 session_start();
+unset($_SESSION["pemasukan"]);
+$_SESSION["pengeluaran"] = true;
 include "../app/control.php";
 
 if (!isset($_SESSION["login"]) || !isset($_SESSION["user"])) {
@@ -117,7 +119,7 @@ $tampilkan = select("SELECT * FROM t_pengeluaran_{$_SESSION["user"]}");
         <div class="cards-containers">
             <div class="cards">
                 <div class="search-container">
-                    <input type="text" class="search-input" placeholder="Search...">
+                    <input id="keyword" type="search" class="search-input" placeholder="Search...">
                 </div>
                 <div class="button-container">
                     <button type="button" class="btn-add" data-bs-toggle="modal" data-bs-target="#staticBackdrop">
@@ -125,7 +127,7 @@ $tampilkan = select("SELECT * FROM t_pengeluaran_{$_SESSION["user"]}");
                         <span class="text-white"><i class="fa fa-plus"></i></span>
                     </button>
                 </div>
-                <div class="table-wrapper">
+                <div id="container" class="table-wrapper">
                     <table>
                         <tr>
                             <th>#</th>

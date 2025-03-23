@@ -1,5 +1,7 @@
 <?php
 session_start();
+unset($_SESSION["pengeluaran"]);
+$_SESSION["pemasukan"] = true;
 include "../app/control.php";
 
 if (!isset($_SESSION["login"]) || !isset($_SESSION["user"])) {
@@ -117,7 +119,7 @@ $tampilkan = select("SELECT * FROM t_pemasukan_{$_SESSION["user"]}");
         <div class="cards-containers">
             <div class="cards">
                 <div class="search-container">
-                    <input type="text" class="search-input" placeholder="Search...">
+                    <input id="keyword" type="search" class="search-input" placeholder="Search...">
                 </div>
                 <div class="button-container">
                     <button type="button" class="btn btn-add" data-bs-toggle="modal" data-bs-target="#staticBackdrop">
@@ -125,7 +127,7 @@ $tampilkan = select("SELECT * FROM t_pemasukan_{$_SESSION["user"]}");
                         <span><i class="fa fa-plus"></i></span>
                     </button>
                 </div>
-                <div class="table-wrapper">
+                <div class="table-wrapper" id="container">
                     <table>
                         <tr>
                             <th>#</th>
@@ -318,7 +320,7 @@ $tampilkan = select("SELECT * FROM t_pemasukan_{$_SESSION["user"]}");
             integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous">
         </script>
 
-
+        <script src="/findash/public/js/jquery.js"></script>
         <script src="/findash/public/js/main.js"></script>
 </body>
 

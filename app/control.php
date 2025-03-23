@@ -122,8 +122,7 @@ if(isset($_POST["save-data-pemasukan"])){
       NULL,
       '$namaBarang',
       $harga,
-      '$tanggal',
-      NULL
+      '$tanggal'
     );";
 
     if (mysqli_query($koneksi, $sql)) {

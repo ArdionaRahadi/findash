@@ -36,3 +36,11 @@ menuItems.forEach(item => {
     });
 });
 
+// live search
+$(document).ready(function() {
+  // event ketika input pencarian di isi
+  $('#keyword').on('keyup', function() {
+    $('#container').load('/findash/public/ajax/search.php?keyword=' + $('#keyword').val())
+  })
+})
+  
